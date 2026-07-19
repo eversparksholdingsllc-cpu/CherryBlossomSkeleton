@@ -3,6 +3,7 @@
   style="
     --header-background: {{ section.settings.background_color }};
     --header-text: {{ section.settings.text_color }};
+    --logo-width: {{ settings.logo_width }}px;
   "
 >
   <div class="site-header__inner">
@@ -142,6 +143,7 @@
   .site-header__logo {
     display: flex;
     align-items: center;
+    justify-content: center;
     font-size: 1.3rem;
     font-weight: 700;
     letter-spacing: 0.04em;
@@ -149,7 +151,7 @@
 
   .site-header__logo img {
     display: block;
-    width: auto;
+    width: var(--logo-width);
     max-width: 100%;
     height: auto;
   }
@@ -297,6 +299,7 @@
   }
 
   @media screen and (max-width: 749px) {
+
     .site-header__inner {
       grid-template-columns: auto 1fr auto;
       min-height: 64px;
@@ -328,6 +331,7 @@
       width: 38px;
       height: 38px;
     }
+
   }
 {% endstylesheet %}
 {% schema %}
