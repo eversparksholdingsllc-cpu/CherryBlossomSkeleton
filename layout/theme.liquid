@@ -2,7 +2,6 @@
 <html lang="{{ request.locale.iso_code }}">
   <head>
 
-    {% # Inlined CSS Variables %}
     {% render 'css-variables' %}
 
     <style>
@@ -13,26 +12,12 @@
         --color-accent-secondary: {{ settings.color_accent_secondary }};
         --color-text: {{ settings.color_text }};
         --color-button-text: {{ settings.color_button_text }};
-
         --button-radius: {{ settings.button_radius }}px;
-
-        --heading-font: {{ settings.font_heading.family }}, {{ settings.font_heading.fallback_families }};
-        --body-font: {{ settings.font_body.family }}, {{ settings.font_body.fallback_families }};
       }
 
       body {
         background-color: var(--color-background);
         color: var(--color-text);
-        font-family: var(--body-font);
-      }
-
-      h1,
-      h2,
-      h3,
-      h4,
-      h5,
-      h6 {
-        font-family: var(--heading-font);
       }
 
       button,
@@ -41,12 +26,6 @@
         border-radius: var(--button-radius);
       }
     </style>
-
-    {% unless settings.type_primary_font.system? %}
-      <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
-
-      {{ settings.type_primary_font | font_url | preload_tag: as: 'font', crossorigin: 'anonymous' }}
-    {% endunless %}
 
     {{ 'critical.css' | asset_url | stylesheet_tag: preload: true }}
 
