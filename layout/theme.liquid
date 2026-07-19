@@ -1,36 +1,68 @@
 <!doctype html>
 <html lang="{{ request.locale.iso_code }}">
   <head>
+
     {% # Inlined CSS Variables %}
     {% render 'css-variables' %}
 
-    {% comment %}
-      Font preloading:
-      1. Preconnect to font CDN for faster connection
-      2. Preload only the critical font variant (base weight)
-      3. Additional variants load on-demand via @font-face
-    {% endcomment %}
+    <style>
+      :root {
+        --color-background: {{ settings.color_background }};
+        --color-surface: {{ settings.color_surface }};
+        --color-accent: {{ settings.color_accent }};
+        --color-accent-secondary: {{ settings.color_accent_secondary }};
+        --color-text: {{ settings.color_text }};
+        --color-button-text: {{ settings.color_button_text }};
+
+        --button-radius: {{ settings.button_radius }}px;
+
+        --heading-font: {{ settings.font_heading.family }}, {{ settings.font_heading.fallback_families }};
+        --body-font: {{ settings.font_body.family }}, {{ settings.font_body.fallback_families }};
+      }
+
+      body {
+        background-color: var(--color-background);
+        color: var(--color-text);
+        font-family: var(--body-font);
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        font-family: var(--heading-font);
+      }
+
+      button,
+      .button,
+      input[type="submit"] {
+        border-radius: var(--button-radius);
+      }
+    </style>
+
     {% unless settings.type_primary_font.system? %}
       <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
 
-      {% comment %} Preload the base font variant for initial page render {% endcomment %}
       {{ settings.type_primary_font | font_url | preload_tag: as: 'font', crossorigin: 'anonymous' }}
     {% endunless %}
 
-    {% # Load and preload the critical CSS %}
     {{ 'critical.css' | asset_url | stylesheet_tag: preload: true }}
 
-    {% # Social, title, etc. %}
     {% render 'meta-tags' %}
 
     {{ content_for_header }}
+
   </head>
 
   <body>
+
     {% sections 'header-group' %}
 
     {{ content_for_layout }}
 
     {% sections 'footer-group' %}
+
   </body>
 </html>
