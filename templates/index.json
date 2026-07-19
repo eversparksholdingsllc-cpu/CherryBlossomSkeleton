@@ -1,0 +1,74 @@
+{
+  "sections": {
+    "hero": {
+      "type": "cherry-blossom-hero",
+      "settings": {}
+    },
+    "featured_collection": {
+      "type": "featured-collection",
+      "settings": {}
+    },
+    "collection_grid": {
+      "type": "collection-grid",
+      "settings": {}
+    },
+    "image_with_text": {
+      "type": "image-with-text",
+      "settings": {}
+    },
+    "testimonials": {
+      "type": "testimonials",
+      "blocks": {
+        "testimonial_1": {
+          "type": "testimonial",
+          "settings": {}
+        },
+        "testimonial_2": {
+          "type": "testimonial",
+          "settings": {}
+        },
+        "testimonial_3": {
+          "type": "testimonial",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "testimonial_1",
+        "testimonial_2",
+        "testimonial_3"
+      ],
+      "settings": {}
+    },
+    "faq": {
+      "type": "faq",
+      "blocks": {
+        "question_1": {
+          "type": "question",
+          "settings": {}
+        },
+        "question_2": {
+          "type": "question",
+          "settings": {}
+        },
+        "question_3": {
+          "type": "question",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "question_1",
+        "question_2",
+        "question_3"
+      ],
+      "settings": {}
+    }
+  },
+  "order": [
+    "hero",
+    "featured_collection",
+    "collection_grid",
+    "image_with_text",
+    "testimonials",
+    "faq"
+  ]
+}

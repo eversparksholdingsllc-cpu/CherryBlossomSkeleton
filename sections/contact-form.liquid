@@ -1,0 +1,317 @@
+<section
+  class="contact-section"
+  style="
+    --contact-background: {{ section.settings.background_color }};
+    --contact-text: {{ section.settings.text_color }};
+  "
+>
+  <div class="contact-section__inner">
+    <header class="contact-section__header">
+      {% if section.settings.eyebrow != blank %}
+        <p class="contact-section__eyebrow">
+          {{ section.settings.eyebrow | escape }}
+        </p>
+      {% endif %}
+
+      {% if section.settings.heading != blank %}
+        <h2>{{ section.settings.heading | escape }}</h2>
+      {% endif %}
+
+      {% if section.settings.description != blank %}
+        <div class="contact-section__description">
+          {{ section.settings.description }}
+        </div>
+      {% endif %}
+    </header>
+
+    {% form 'contact', class: 'contact-form' %}
+      {% if form.posted_successfully? %}
+        <p class="contact-form__success" tabindex="-1">
+          Thanks for contacting us. We’ll get back to you soon.
+        </p>
+      {% endif %}
+
+      {% if form.errors %}
+        <div class="contact-form__errors">
+          {{ form.errors | default_errors }}
+        </div>
+      {% endif %}
+
+      <div class="contact-form__grid">
+        <div class="contact-form__field">
+          <label for="ContactName-{{ section.id }}">
+            Name
+          </label>
+
+          <input
+            id="ContactName-{{ section.id }}"
+            type="text"
+            name="contact[name]"
+            value="{{ form.name }}"
+            autocomplete="name"
+            placeholder="Your name"
+          >
+        </div>
+
+        <div class="contact-form__field">
+          <label for="ContactEmail-{{ section.id }}">
+            Email
+          </label>
+
+          <input
+            id="ContactEmail-{{ section.id }}"
+            type="email"
+            name="contact[email]"
+            value="{{ form.email }}"
+            autocomplete="email"
+            placeholder="you@example.com"
+            required
+          >
+        </div>
+      </div>
+
+      {% if section.settings.show_phone %}
+        <div class="contact-form__field">
+          <label for="ContactPhone-{{ section.id }}">
+            Phone
+          </label>
+
+          <input
+            id="ContactPhone-{{ section.id }}"
+            type="tel"
+            name="contact[phone]"
+            value="{{ form.phone }}"
+            autocomplete="tel"
+            placeholder="Your phone number"
+          >
+        </div>
+      {% endif %}
+
+      {% if section.settings.show_subject %}
+        <div class="contact-form__field">
+          <label for="ContactSubject-{{ section.id }}">
+            Subject
+          </label>
+
+          <input
+            id="ContactSubject-{{ section.id }}"
+            type="text"
+            name="contact[subject]"
+            placeholder="How can we help?"
+          >
+        </div>
+      {% endif %}
+
+      <div class="contact-form__field">
+        <label for="ContactMessage-{{ section.id }}">
+          Message
+        </label>
+
+        <textarea
+          id="ContactMessage-{{ section.id }}"
+          name="contact[body]"
+          rows="8"
+          placeholder="Write your message here"
+          required
+        >{{ form.body }}</textarea>
+      </div>
+
+      <button class="contact-form__submit" type="submit">
+        {{ section.settings.button_label | escape }}
+      </button>
+    {% endform %}
+  </div>
+</section>
+
+{% stylesheet %}
+  .contact-section {
+    width: 100%;
+    padding: 72px 0;
+    background: var(--contact-background);
+    color: var(--contact-text);
+  }
+
+  .contact-section__inner {
+    width: min(100% - 32px, 900px);
+    margin: 0 auto;
+  }
+
+  .contact-section__header {
+    max-width: 700px;
+    margin: 0 auto 38px;
+    text-align: center;
+  }
+
+  .contact-section__eyebrow {
+    margin: 0 0 10px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+
+  .contact-section__header h2 {
+    margin: 0;
+    font-size: clamp(2.2rem, 6vw, 4.5rem);
+    line-height: 1;
+  }
+
+  .contact-section__description {
+    margin-top: 18px;
+    line-height: 1.7;
+    opacity: 0.78;
+  }
+
+  .contact-section__description p {
+    margin: 0;
+  }
+
+  .contact-form {
+    display: grid;
+    gap: 20px;
+    padding: clamp(24px, 5vw, 44px);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.65);
+    box-shadow: 0 18px 46px rgba(64, 39, 51, 0.07);
+  }
+
+  .contact-form__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  .contact-form__field {
+    display: grid;
+    gap: 8px;
+  }
+
+  .contact-form__field label {
+    font-weight: 700;
+  }
+
+  .contact-form__field input,
+  .contact-form__field textarea {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid rgba(0, 0, 0, 0.16);
+    border-radius: 12px;
+    background: white;
+    color: inherit;
+    font: inherit;
+  }
+
+  .contact-form__field textarea {
+    resize: vertical;
+  }
+
+  .contact-form__field input:focus,
+  .contact-form__field textarea:focus {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+
+  .contact-form__submit {
+    min-height: 52px;
+    padding: 13px 26px;
+    border: 0;
+    border-radius: 999px;
+    background: var(--contact-text);
+    color: var(--contact-background);
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .contact-form__success,
+  .contact-form__errors {
+    margin: 0;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.05);
+  }
+
+  .contact-form__errors ul {
+    margin: 0;
+    padding-left: 20px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .contact-section {
+      padding: 52px 0;
+    }
+
+    .contact-form__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .contact-form {
+      border-radius: 18px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Contact form",
+  "tag": "section",
+  "class": "section-contact-form",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Small heading",
+      "default": "Get in touch"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "We’d love to hear from you"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Ask a question, request support, or tell us what’s on your mind.</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_phone",
+      "label": "Show phone field",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_subject",
+      "label": "Show subject field",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Send message"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#fffafc"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#402733"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Contact form"
+    }
+  ]
+}
+{% endschema %}

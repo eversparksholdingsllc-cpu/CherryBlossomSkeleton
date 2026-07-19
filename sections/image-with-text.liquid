@@ -1,0 +1,268 @@
+<section
+  class="image-with-text image-with-text--{{ section.settings.layout }}"
+  style="
+    --image-text-background: {{ section.settings.background_color }};
+    --image-text-color: {{ section.settings.text_color }};
+  "
+>
+  <div class="image-with-text__inner">
+    <div class="image-with-text__media">
+      {% if section.settings.image != blank %}
+        {{
+          section.settings.image
+          | image_url: width: 1600
+          | image_tag:
+            class: 'image-with-text__image',
+            loading: 'lazy',
+            widths: '500, 750, 1000, 1250, 1600',
+            sizes: '(min-width: 750px) 50vw, 100vw',
+            alt: section.settings.image.alt
+        }}
+      {% else %}
+        {{ 'lifestyle-1' | placeholder_svg_tag: 'image-with-text__placeholder' }}
+      {% endif %}
+    </div>
+
+    <div class="image-with-text__content">
+      {% if section.settings.eyebrow != blank %}
+        <p class="image-with-text__eyebrow">
+          {{ section.settings.eyebrow | escape }}
+        </p>
+      {% endif %}
+
+      {% if section.settings.heading != blank %}
+        <h2 class="image-with-text__heading">
+          {{ section.settings.heading }}
+        </h2>
+      {% endif %}
+
+      {% if section.settings.text != blank %}
+        <div class="image-with-text__text">
+          {{ section.settings.text }}
+        </div>
+      {% endif %}
+
+      {% if section.settings.button_label != blank %}
+        <a
+          class="image-with-text__button"
+          {% if section.settings.button_link != blank %}
+            href="{{ section.settings.button_link }}"
+          {% else %}
+            role="link"
+            aria-disabled="true"
+          {% endif %}
+        >
+          {{ section.settings.button_label | escape }}
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .image-with-text {
+    width: 100%;
+    padding: 72px 0;
+    background: var(--image-text-background);
+    color: var(--image-text-color);
+  }
+
+  .image-with-text__inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: min(100% - 32px, 1400px);
+    margin: 0 auto;
+    overflow: hidden;
+    border-radius: 28px;
+    background: rgba(255, 255, 255, 0.48);
+  }
+
+  .image-with-text--image-right .image-with-text__media {
+    order: 2;
+  }
+
+  .image-with-text--image-right .image-with-text__content {
+    order: 1;
+  }
+
+  .image-with-text__media {
+    min-height: 560px;
+    background: rgba(0, 0, 0, 0.05);
+  }
+
+  .image-with-text__image,
+  .image-with-text__placeholder {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 560px;
+    object-fit: cover;
+  }
+
+  .image-with-text__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: clamp(40px, 7vw, 90px);
+  }
+
+  .image-with-text__eyebrow {
+    margin: 0 0 12px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+
+  .image-with-text__heading {
+    margin: 0;
+    font-size: clamp(2.1rem, 5vw, 4.2rem);
+    line-height: 1.03;
+  }
+
+  .image-with-text__text {
+    margin-top: 22px;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    opacity: 0.8;
+  }
+
+  .image-with-text__text p {
+    margin: 0 0 1em;
+  }
+
+  .image-with-text__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    min-height: 48px;
+    margin-top: 26px;
+    padding: 12px 26px;
+    border: 1px solid currentColor;
+    border-radius: 999px;
+    color: inherit;
+    font-weight: 700;
+    text-decoration: none;
+    transition:
+      transform 180ms ease,
+      background 180ms ease,
+      color 180ms ease;
+  }
+
+  .image-with-text__button:hover {
+    transform: translateY(-2px);
+    background: var(--image-text-color);
+    color: var(--image-text-background);
+  }
+
+  @media screen and (max-width: 749px) {
+    .image-with-text {
+      padding: 52px 0;
+    }
+
+    .image-with-text__inner {
+      grid-template-columns: 1fr;
+      border-radius: 20px;
+    }
+
+    .image-with-text--image-right .image-with-text__media,
+    .image-with-text--image-right .image-with-text__content {
+      order: initial;
+    }
+
+    .image-with-text__media,
+    .image-with-text__image,
+    .image-with-text__placeholder {
+      min-height: 380px;
+    }
+
+    .image-with-text__content {
+      padding: 38px 24px 44px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .image-with-text__button {
+      transition: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Image with text",
+  "tag": "section",
+  "class": "section-image-with-text",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Image position",
+      "default": "image-left",
+      "options": [
+        {
+          "value": "image-left",
+          "label": "Image left"
+        },
+        {
+          "value": "image-right",
+          "label": "Image right"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Small heading",
+      "default": "Our story"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Made with care for beautiful everyday moments"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>Share your brand story, values, materials, or what makes your products special.</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Learn more"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#f8e8ef"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#402733"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image with text"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,205 @@
+<section
+  class="standard-page"
+  style="
+    --page-background: {{ section.settings.background_color }};
+    --page-text: {{ section.settings.text_color }};
+    --page-width: {{ section.settings.content_width }}px;
+    --page-alignment: {{ section.settings.text_alignment }};
+  "
+>
+  <div class="standard-page__inner">
+    {% if section.settings.show_title %}
+      <header class="standard-page__header">
+        <h1>{{ page.title | escape }}</h1>
+      </header>
+    {% endif %}
+
+    {% if page.content != blank %}
+      <div class="standard-page__content rte">
+        {{ page.content }}
+      </div>
+    {% else %}
+      <div class="standard-page__empty">
+        <p>Add content to this page from your Shopify admin.</p>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+{% stylesheet %}
+  .standard-page {
+    width: 100%;
+    min-height: 50vh;
+    padding: 64px 0 84px;
+    background: var(--page-background);
+    color: var(--page-text);
+  }
+
+  .standard-page__inner {
+    width: min(100% - 32px, var(--page-width));
+    margin: 0 auto;
+  }
+
+  .standard-page__header {
+    margin-bottom: 34px;
+    text-align: var(--page-alignment);
+  }
+
+  .standard-page__header h1 {
+    margin: 0;
+    font-size: clamp(2.5rem, 7vw, 5rem);
+    line-height: 1;
+  }
+
+  .standard-page__content {
+    font-size: 1.05rem;
+    line-height: 1.8;
+  }
+
+  .standard-page__content h2,
+  .standard-page__content h3,
+  .standard-page__content h4 {
+    margin-top: 1.8em;
+    margin-bottom: 0.7em;
+    line-height: 1.2;
+  }
+
+  .standard-page__content h2 {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+  }
+
+  .standard-page__content h3 {
+    font-size: clamp(1.4rem, 3vw, 2rem);
+  }
+
+  .standard-page__content p {
+    margin: 0 0 1.3em;
+  }
+
+  .standard-page__content ul,
+  .standard-page__content ol {
+    margin: 0 0 1.4em;
+    padding-left: 1.5em;
+  }
+
+  .standard-page__content li {
+    margin-bottom: 0.55em;
+  }
+
+  .standard-page__content a {
+    color: inherit;
+    text-underline-offset: 3px;
+  }
+
+  .standard-page__content img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 32px auto;
+    border-radius: 18px;
+  }
+
+  .standard-page__content blockquote {
+    margin: 32px 0;
+    padding: 22px 26px;
+    border-left: 4px solid currentColor;
+    border-radius: 0 14px 14px 0;
+    background: rgba(0, 0, 0, 0.04);
+    font-size: 1.15rem;
+  }
+
+  .standard-page__content table {
+    width: 100%;
+    margin: 30px 0;
+    border-collapse: collapse;
+  }
+
+  .standard-page__content th,
+  .standard-page__content td {
+    padding: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    text-align: left;
+  }
+
+  .standard-page__empty {
+    padding: 70px 20px;
+    text-align: center;
+    opacity: 0.65;
+  }
+
+  @media screen and (max-width: 749px) {
+    .standard-page {
+      padding: 44px 0 64px;
+    }
+
+    .standard-page__header {
+      margin-bottom: 26px;
+    }
+
+    .standard-page__content {
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    .standard-page__content blockquote {
+      padding: 18px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Page content",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_title",
+      "label": "Show page title",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Title alignment",
+      "default": "center",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "label": "Content width",
+      "min": 600,
+      "max": 1200,
+      "step": 50,
+      "unit": "px",
+      "default": 850
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#fffafc"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#402733"
+    }
+  ]
+}
+{% endschema %}
+/.

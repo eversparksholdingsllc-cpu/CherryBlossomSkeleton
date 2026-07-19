@@ -1,0 +1,446 @@
+{% liquid
+  assign heading = section.settings.heading
+  assign text = section.settings.text
+  assign button_label = section.settings.button_label
+  assign button_link = section.settings.button_link
+  assign background_image = section.settings.background_image
+%}
+
+<section
+  id="CherryBlossomHero-{{ section.id }}"
+  class="cherry-hero"
+  style="
+    --hero-text-color: {{ section.settings.text_color }};
+    --hero-overlay-color: {{ section.settings.overlay_color }};
+    --hero-overlay-opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
+    --hero-min-height: {{ section.settings.mobile_height }}px;
+  "
+>
+  {% if background_image != blank %}
+    <div class="cherry-hero__media">
+      {{
+        background_image
+        | image_url: width: 2400
+        | image_tag:
+          class: 'cherry-hero__image',
+          loading: 'lazy',
+          widths: '600, 900, 1200, 1600, 2000, 2400',
+          sizes: '100vw',
+          alt: background_image.alt
+      }}
+    </div>
+  {% else %}
+    <div class="cherry-hero__placeholder">
+      {{ 'lifestyle-1' | placeholder_svg_tag: 'cherry-hero__placeholder-svg' }}
+    </div>
+  {% endif %}
+
+  <div class="cherry-hero__overlay"></div>
+
+  <div class="cherry-hero__content cherry-hero__content--{{ section.settings.content_position }}">
+    <div class="cherry-hero__box">
+      {% if section.settings.eyebrow != blank %}
+        <p class="cherry-hero__eyebrow">
+          {{ section.settings.eyebrow | escape }}
+        </p>
+      {% endif %}
+
+      {% if heading != blank %}
+        <h1 class="cherry-hero__heading">
+          {{ heading }}
+        </h1>
+      {% endif %}
+
+      {% if text != blank %}
+        <div class="cherry-hero__text rte">
+          {{ text }}
+        </div>
+      {% endif %}
+
+      {% if button_label != blank %}
+        <a
+          class="cherry-hero__button"
+          {% if button_link != blank %}
+            href="{{ button_link }}"
+          {% else %}
+            role="link"
+            aria-disabled="true"
+          {% endif %}
+        >
+          {{ button_label | escape }}
+        </a>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if section.settings.show_petals %}
+    <div class="cherry-hero__petals" aria-hidden="true">
+      {% for petal_number in (1..12) %}
+        <span class="cherry-hero__petal cherry-hero__petal--{{ petal_number }}"></span>
+      {% endfor %}
+    </div>
+  {% endif %}
+</section>
+
+{% stylesheet %}
+  .cherry-hero {
+    position: relative;
+    display: grid;
+    min-height: var(--hero-min-height);
+    overflow: hidden;
+    isolation: isolate;
+    color: var(--hero-text-color);
+    background: #fbeaf2;
+  }
+
+  .cherry-hero__media,
+  .cherry-hero__placeholder,
+  .cherry-hero__overlay,
+  .cherry-hero__content,
+  .cherry-hero__petals {
+    grid-area: 1 / 1;
+  }
+
+  .cherry-hero__media,
+  .cherry-hero__placeholder {
+    position: absolute;
+    inset: 0;
+    z-index: -3;
+  }
+
+  .cherry-hero__image,
+  .cherry-hero__placeholder-svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .cherry-hero__placeholder-svg {
+    background: #f9dce8;
+  }
+
+  .cherry-hero__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    background: var(--hero-overlay-color);
+    opacity: var(--hero-overlay-opacity);
+  }
+
+  .cherry-hero__content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    width: min(100%, 1400px);
+    min-height: var(--hero-min-height);
+    margin: 0 auto;
+    padding: 48px 20px;
+  }
+
+  .cherry-hero__content--left {
+    align-items: center;
+    justify-content: flex-start;
+    text-align: left;
+  }
+
+  .cherry-hero__content--center {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .cherry-hero__content--right {
+    align-items: center;
+    justify-content: flex-end;
+    text-align: right;
+  }
+
+  .cherry-hero__box {
+    width: min(100%, 680px);
+  }
+
+  .cherry-hero__eyebrow {
+    margin: 0 0 12px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .cherry-hero__heading {
+    margin: 0;
+    font-size: clamp(2.4rem, 9vw, 5.8rem);
+    line-height: 0.98;
+  }
+
+  .cherry-hero__text {
+    max-width: 560px;
+    margin: 22px auto 0;
+    font-size: clamp(1rem, 2.5vw, 1.25rem);
+    line-height: 1.6;
+  }
+
+  .cherry-hero__content--left .cherry-hero__text {
+    margin-left: 0;
+  }
+
+  .cherry-hero__content--right .cherry-hero__text {
+    margin-right: 0;
+  }
+
+  .cherry-hero__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    margin-top: 28px;
+    padding: 12px 28px;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.9);
+    color: #6e2945;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 10px 30px rgba(87, 35, 57, 0.15);
+    transition:
+      transform 180ms ease,
+      box-shadow 180ms ease;
+  }
+
+  .cherry-hero__button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 36px rgba(87, 35, 57, 0.25);
+  }
+
+  .cherry-hero__petals {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .cherry-hero__petal {
+    position: absolute;
+    top: -12%;
+    width: 13px;
+    height: 18px;
+    border-radius: 70% 30% 70% 30%;
+    background: rgba(255, 211, 226, 0.85);
+    animation: cherry-petal-fall 10s linear infinite;
+  }
+
+  .cherry-hero__petal--1 {
+    left: 4%;
+    animation-delay: -2s;
+  }
+
+  .cherry-hero__petal--2 {
+    left: 12%;
+    animation-delay: -7s;
+    animation-duration: 13s;
+  }
+
+  .cherry-hero__petal--3 {
+    left: 22%;
+    animation-delay: -4s;
+    animation-duration: 9s;
+  }
+
+  .cherry-hero__petal--4 {
+    left: 31%;
+    animation-delay: -10s;
+    animation-duration: 15s;
+  }
+
+  .cherry-hero__petal--5 {
+    left: 39%;
+    animation-delay: -1s;
+    animation-duration: 12s;
+  }
+
+  .cherry-hero__petal--6 {
+    left: 48%;
+    animation-delay: -5s;
+  }
+
+  .cherry-hero__petal--7 {
+    left: 57%;
+    animation-delay: -9s;
+    animation-duration: 14s;
+  }
+
+  .cherry-hero__petal--8 {
+    left: 65%;
+    animation-delay: -3s;
+    animation-duration: 11s;
+  }
+
+  .cherry-hero__petal--9 {
+    left: 73%;
+    animation-delay: -8s;
+    animation-duration: 16s;
+  }
+
+  .cherry-hero__petal--10 {
+    left: 81%;
+    animation-delay: -6s;
+  }
+
+  .cherry-hero__petal--11 {
+    left: 89%;
+    animation-delay: -11s;
+    animation-duration: 13s;
+  }
+
+  .cherry-hero__petal--12 {
+    left: 96%;
+    animation-delay: -4s;
+    animation-duration: 17s;
+  }
+
+  @keyframes cherry-petal-fall {
+    0% {
+      transform: translate3d(0, -10vh, 0) rotate(0deg);
+      opacity: 0;
+    }
+
+    10% {
+      opacity: 1;
+    }
+
+    50% {
+      transform: translate3d(45px, 50vh, 0) rotate(180deg);
+    }
+
+    100% {
+      transform: translate3d(-35px, 115vh, 0) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  @media screen and (min-width: 750px) {
+    .cherry-hero__content {
+      min-height: max(var(--hero-min-height), 650px);
+      padding: 80px 60px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cherry-hero__petal {
+      animation: none;
+      display: none;
+    }
+
+    .cherry-hero__button {
+      transition: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Cherry blossom hero",
+  "tag": "section",
+  "class": "section-cherry-blossom-hero",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Small heading",
+      "default": "A magical new collection"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Where every purchase feels magical"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Description",
+      "default": "<p>Discover dreamy products created for your softest, sweetest moments.</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Shop the collection"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "select",
+      "id": "content_position",
+      "label": "Text position",
+      "default": "center",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ]
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Image overlay color",
+      "default": "#6e2945"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Image overlay opacity",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "default": 25
+    },
+    {
+      "type": "range",
+      "id": "mobile_height",
+      "label": "Minimum section height",
+      "min": 400,
+      "max": 850,
+      "step": 25,
+      "unit": "px",
+      "default": 625
+    },
+    {
+      "type": "checkbox",
+      "id": "show_petals",
+      "label": "Show falling petals",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Cherry blossom hero"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,351 @@
+<section
+  class="blog-page"
+  style="
+    --blog-background: {{ section.settings.background_color }};
+    --blog-text: {{ section.settings.text_color }};
+    --blog-columns: {{ section.settings.columns_desktop }};
+  "
+>
+  <div class="blog-page__inner">
+    <header class="blog-page__header">
+      {% if section.settings.eyebrow != blank %}
+        <p class="blog-page__eyebrow">
+          {{ section.settings.eyebrow | escape }}
+        </p>
+      {% endif %}
+
+      <h1>{{ blog.title | escape }}</h1>
+
+      {% if section.settings.description != blank %}
+        <div class="blog-page__description">
+          {{ section.settings.description }}
+        </div>
+      {% endif %}
+    </header>
+
+    {% paginate blog.articles by section.settings.articles_per_page %}
+      {% if blog.articles.size > 0 %}
+        <div class="blog-page__grid">
+          {% for article in blog.articles %}
+            <article class="blog-card">
+              <a class="blog-card__media-link" href="{{ article.url }}">
+                <div class="blog-card__media">
+                  {% if article.image != blank %}
+                    {{
+                      article.image
+                      | image_url: width: 1400
+                      | image_tag:
+                        class: 'blog-card__image',
+                        loading: 'lazy',
+                        widths: '400, 600, 800, 1000, 1200, 1400',
+                        sizes: '(min-width: 990px) 33vw, (min-width: 750px) 50vw, 100vw',
+                        alt: article.title
+                    }}
+                  {% else %}
+                    {{ 'lifestyle-1' | placeholder_svg_tag: 'blog-card__placeholder' }}
+                  {% endif %}
+                </div>
+              </a>
+
+              <div class="blog-card__content">
+                {% if section.settings.show_date or section.settings.show_author %}
+                  <div class="blog-card__metadata">
+                    {% if section.settings.show_date %}
+                      <span>
+                        {{ article.published_at | date: '%B %d, %Y' }}
+                      </span>
+                    {% endif %}
+
+                    {% if section.settings.show_author %}
+                      <span>
+                        By {{ article.author | escape }}
+                      </span>
+                    {% endif %}
+                  </div>
+                {% endif %}
+
+                <h2 class="blog-card__title">
+                  <a href="{{ article.url }}">
+                    {{ article.title | escape }}
+                  </a>
+                </h2>
+
+                {% if section.settings.show_excerpt %}
+                  <p class="blog-card__excerpt">
+                    {% if article.excerpt != blank %}
+                      {{ article.excerpt | strip_html | truncatewords: 24 }}
+                    {% else %}
+                      {{ article.content | strip_html | truncatewords: 24 }}
+                    {% endif %}
+                  </p>
+                {% endif %}
+
+                <a class="blog-card__read-more" href="{{ article.url }}">
+                  Read article
+                </a>
+              </div>
+            </article>
+          {% endfor %}
+        </div>
+
+        {% if paginate.pages > 1 %}
+          <nav
+            class="blog-page__pagination"
+            aria-label="Blog pagination"
+          >
+            {{ paginate | default_pagination }}
+          </nav>
+        {% endif %}
+      {% else %}
+        <div class="blog-page__empty">
+          <h2>No articles yet</h2>
+          <p>Publish your first article from the Shopify admin.</p>
+        </div>
+      {% endif %}
+    {% endpaginate %}
+  </div>
+</section>
+
+{% stylesheet %}
+  .blog-page {
+    width: 100%;
+    padding: 64px 0 84px;
+    background: var(--blog-background);
+    color: var(--blog-text);
+  }
+
+  .blog-page__inner {
+    width: min(100% - 32px, 1400px);
+    margin: 0 auto;
+  }
+
+  .blog-page__header {
+    max-width: 760px;
+    margin: 0 auto 44px;
+    text-align: center;
+  }
+
+  .blog-page__eyebrow {
+    margin: 0 0 10px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+
+  .blog-page__header h1 {
+    margin: 0;
+    font-size: clamp(2.6rem, 7vw, 5.5rem);
+    line-height: 1;
+  }
+
+  .blog-page__description {
+    margin-top: 18px;
+    line-height: 1.7;
+    opacity: 0.78;
+  }
+
+  .blog-page__description p {
+    margin: 0;
+  }
+
+  .blog-page__grid {
+    display: grid;
+    grid-template-columns: repeat(var(--blog-columns), minmax(0, 1fr));
+    gap: 34px 24px;
+  }
+
+  .blog-card {
+    min-width: 0;
+  }
+
+  .blog-card a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .blog-card__media {
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    border-radius: 22px;
+    background: rgba(0, 0, 0, 0.05);
+  }
+
+  .blog-card__image,
+  .blog-card__placeholder {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 300ms ease;
+  }
+
+  .blog-card__media-link:hover .blog-card__image {
+    transform: scale(1.035);
+  }
+
+  .blog-card__content {
+    padding-top: 18px;
+  }
+
+  .blog-card__metadata {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 14px;
+    margin-bottom: 10px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    opacity: 0.58;
+  }
+
+  .blog-card__title {
+    margin: 0;
+    font-size: clamp(1.35rem, 2.6vw, 2rem);
+    line-height: 1.18;
+  }
+
+  .blog-card__excerpt {
+    margin: 14px 0 0;
+    line-height: 1.65;
+    opacity: 0.72;
+  }
+
+  .blog-card__read-more {
+    display: inline-flex;
+    margin-top: 18px;
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .blog-page__pagination {
+    margin-top: 54px;
+    text-align: center;
+  }
+
+  .blog-page__pagination .page,
+  .blog-page__pagination .next,
+  .blog-page__pagination .prev {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 42px;
+    min-height: 42px;
+    margin: 3px;
+    padding: 8px 12px;
+    border: 1px solid rgba(0, 0, 0, 0.14);
+    border-radius: 999px;
+  }
+
+  .blog-page__empty {
+    padding: 80px 20px;
+    text-align: center;
+  }
+
+  .blog-page__empty h2 {
+    margin: 0;
+    font-size: 2rem;
+  }
+
+  .blog-page__empty p {
+    margin: 14px 0 0;
+  }
+
+  @media screen and (max-width: 989px) {
+    .blog-page__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .blog-page {
+      padding: 48px 0 64px;
+    }
+
+    .blog-page__grid {
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+
+    .blog-card__media {
+      border-radius: 18px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .blog-card__image {
+      transition: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Blog",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Small heading",
+      "default": "Stories and inspiration"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Share updates, guides, inspiration, and behind-the-scenes stories.</p>"
+    },
+    {
+      "type": "range",
+      "id": "articles_per_page",
+      "label": "Articles per page",
+      "min": 3,
+      "max": 24,
+      "step": 3,
+      "default": 9
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Desktop columns",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "checkbox",
+      "id": "show_date",
+      "label": "Show publication date",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_author",
+      "label": "Show author",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_excerpt",
+      "label": "Show article excerpt",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#fffafc"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#402733"
+    }
+  ]
+}
+{% endschema %}
