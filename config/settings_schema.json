@@ -18,12 +18,22 @@
       {
         "type": "range",
         "id": "logo_width",
-        "label": "Logo width",
+        "label": "Desktop logo width",
         "min": 80,
         "max": 320,
         "step": 10,
         "unit": "px",
         "default": 180
+      },
+      {
+        "type": "range",
+        "id": "logo_width_mobile",
+        "label": "Mobile logo width",
+        "min": 50,
+        "max": 220,
+        "step": 10,
+        "unit": "px",
+        "default": 120
       }
     ]
   },
