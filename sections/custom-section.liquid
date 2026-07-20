@@ -1,59 +1,357 @@
-<div class="custom-section full-width">
-  {% if section.settings.background_image %}
-    <div class="custom-section__background">
-      {{ section.settings.background_image | image_url: width: 2000 | image_tag }}
-    </div>
-  {% endif %}
+<section
+  class="custom-section"
+  style="
+    --custom-height: {{ section.settings.height }}px;
+    --custom-height-mobile: {{ section.settings.height_mobile }}px;
+    --custom-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
+  "
+>
 
-  <div class="custom-section__content">
-    {% content_for 'blocks' %}
+  <div class="custom-section__media">
+
+    {% if section.settings.image_desktop != blank or section.settings.image_mobile != blank %}
+
+      <picture>
+
+        {% if section.settings.image_mobile != blank %}
+          <source
+            media="(max-width: 749px)"
+            srcset="{{ section.settings.image_mobile | image_url: width: 1200 }}"
+          >
+        {% endif %}
+
+
+        {% if section.settings.image_desktop != blank %}
+          {{
+            section.settings.image_desktop
+            | image_url: width: 2200
+            | image_tag:
+              class: 'custom-section__image',
+              loading: 'lazy',
+              widths: '750,1000,1500,2200',
+              sizes: '100vw',
+              alt: section.settings.image_desktop.alt
+          }}
+        {% endif %}
+
+      </picture>
+
+    {% endif %}
+
+
+    <div class="custom-section__overlay"></div>
+
   </div>
-</div>
 
+
+
+  <div class="
+    custom-section__content
+    custom-section__content--{{ section.settings.desktop_alignment }}
+    custom-section__content-mobile--{{ section.settings.mobile_alignment }}
+  ">
+
+    {% if section.settings.eyebrow != blank %}
+      <p class="custom-section__eyebrow">
+        {{ section.settings.eyebrow | escape }}
+      </p>
+    {% endif %}
+
+
+    {% if section.settings.heading != blank %}
+      <h2 class="custom-section__heading">
+        {{ section.settings.heading }}
+      </h2>
+    {% endif %}
+
+
+    {% if section.settings.text != blank %}
+      <div class="custom-section__text">
+        {{ section.settings.text }}
+      </div>
+    {% endif %}
+
+
+    {% if section.settings.button_label != blank %}
+      <a
+        class="custom-section__button"
+        href="{{ section.settings.button_link }}"
+      >
+        {{ section.settings.button_label | escape }}
+      </a>
+    {% endif %}
+
+  </div>
+
+</section>
 {% stylesheet %}
+
   .custom-section {
     position: relative;
-    overflow: hidden;
     width: 100%;
+    height: var(--custom-height);
+    overflow: hidden;
+    color: white;
   }
-  .custom-section__background {
+
+
+  .custom-section__media {
     position: absolute;
+    inset: 0;
+  }
+
+
+  .custom-section__image {
+    display: block;
     width: 100%;
     height: 100%;
-    z-index: -1;
-    overflow: hidden;
+    object-fit: cover;
   }
-  .custom-section__background img {
-    position: absolute;
-    width: 100%;
-    height: auto;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-  .custom-section__content {
-    display: grid;
-    grid-template-columns: var(--content-grid);
-  }
-  .custom-section__content > * {
-    grid-column: 2;
-  }
-{% endstylesheet %}
 
+
+  .custom-section__overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, var(--custom-overlay));
+  }
+
+
+  .custom-section__content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    width: min(100% - 40px, 1400px);
+    margin: 0 auto;
+  }
+
+
+  .custom-section__content--left {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+
+  .custom-section__content--center {
+    align-items: center;
+    text-align: center;
+  }
+
+
+  .custom-section__content--right {
+    align-items: flex-end;
+    text-align: right;
+  }
+
+
+  .custom-section__eyebrow {
+    margin: 0 0 14px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+
+  .custom-section__heading {
+    max-width: 900px;
+    margin: 0;
+    font-size: clamp(2.4rem, 6vw, 5.5rem);
+    line-height: 1.05;
+  }
+
+
+  .custom-section__text {
+    max-width: 700px;
+    margin-top: 22px;
+    font-size: 1.1rem;
+    line-height: 1.7;
+  }
+
+
+  .custom-section__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 30px;
+    padding: 14px 34px;
+    border-radius: 999px;
+    background: white;
+    color: #402733;
+    font-weight: 700;
+    text-decoration: none;
+    transition: transform 180ms ease;
+  }
+
+
+  .custom-section__button:hover {
+    transform: translateY(-2px);
+  }
+
+
+
+  @media screen and (max-width: 749px) {
+
+    .custom-section {
+      height: var(--custom-height-mobile);
+    }
+
+
+    .custom-section__content {
+      width: min(100% - 32px, 700px);
+    }
+
+
+    .custom-section__content-mobile--top {
+      justify-content: flex-start;
+      padding-top: 70px;
+    }
+
+
+    .custom-section__content-mobile--center {
+      justify-content: center;
+    }
+
+
+    .custom-section__content-mobile--bottom {
+      justify-content: flex-end;
+      padding-bottom: 60px;
+    }
+
+
+    .custom-section__heading {
+      font-size: clamp(2rem, 10vw, 3.8rem);
+    }
+
+
+    .custom-section__text {
+      font-size: 1rem;
+    }
+
+  }
+
+{% endstylesheet %}
 {% schema %}
 {
-  "name": "t:general.custom_section",
-  "blocks": [{ "type": "@theme" }],
+  "name": "Custom Section",
+  "tag": "section",
+  "class": "section-custom-section",
   "settings": [
     {
       "type": "image_picker",
-      "id": "background_image",
-      "label": "t:labels.background"
+      "id": "image_desktop",
+      "label": "Desktop image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Mobile image"
+    },
+    {
+      "type": "range",
+      "id": "height",
+      "label": "Desktop height",
+      "min": 300,
+      "max": 1000,
+      "step": 25,
+      "unit": "px",
+      "default": 650
+    },
+    {
+      "type": "range",
+      "id": "height_mobile",
+      "label": "Mobile height",
+      "min": 250,
+      "max": 800,
+      "step": 25,
+      "unit": "px",
+      "default": 500
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Image overlay darkness",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "default": 25
+    },
+    {
+      "type": "select",
+      "id": "desktop_alignment",
+      "label": "Desktop text position",
+      "default": "center",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "mobile_alignment",
+      "label": "Mobile text position",
+      "default": "center",
+      "options": [
+        {
+          "value": "top",
+          "label": "Top"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "bottom",
+          "label": "Bottom"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Small heading",
+      "default": "Featured"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Create something beautiful"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>Add your message, promotion, or brand story here.</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Learn more"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
     }
   ],
   "presets": [
     {
-      "name": "t:general.custom_section"
+      "name": "Custom Section"
     }
   ]
 }
