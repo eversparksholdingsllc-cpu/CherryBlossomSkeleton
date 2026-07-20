@@ -1,78 +1,238 @@
-{% if section.settings.show_bar %}
-  <div
-    class="announcement-bar"
-    style="
-      --announcement-background: {{ section.settings.background_color }};
-      --announcement-text: {{ section.settings.text_color }};
-    "
-  >
-    <div class="announcement-bar__inner">
-      {% if section.settings.link != blank %}
-        <a href="{{ section.settings.link }}">
-          {{ section.settings.text | escape }}
-        </a>
-      {% else %}
-        <p>{{ section.settings.text | escape }}</p>
-      {% endif %}
-    </div>
-  </div>
-{% endif %}
+<section
+  class="announcement-bar"
+  style="
+    --announcement-background: {{ section.settings.background_color }};
+    --announcement-text: {{ section.settings.text_color }};
+    --announcement-size: {{ section.settings.text_size }}px;
+    --announcement-size-mobile: {{ section.settings.text_size_mobile }}px;
+    --announcement-padding: {{ section.settings.padding }}px;
+    --announcement-padding-mobile: {{ section.settings.padding_mobile }}px;
+  "
+>
 
+  <div class="
+    announcement-bar__inner
+    announcement-bar__inner--{{ section.settings.desktop_alignment }}
+    announcement-bar__inner-mobile--{{ section.settings.mobile_alignment }}
+  ">
+
+    {% if section.settings.text != blank %}
+      <div class="announcement-bar__text">
+        {{ section.settings.text }}
+      </div>
+    {% endif %}
+
+
+    {% if section.settings.link != blank %}
+      <a
+        class="announcement-bar__link"
+        href="{{ section.settings.link }}"
+      >
+        {{ section.settings.link_text | escape }}
+      </a>
+    {% endif %}
+
+  </div>
+
+</section>
 {% stylesheet %}
+
   .announcement-bar {
     width: 100%;
+    padding: var(--announcement-padding) 20px;
     background: var(--announcement-background);
     color: var(--announcement-text);
   }
 
+
   .announcement-bar__inner {
-    width: min(100% - 32px, 1400px);
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    max-width: 1400px;
     margin: 0 auto;
-    padding: 10px 16px;
+  }
+
+
+  .announcement-bar__inner--left {
+    justify-content: flex-start;
+    text-align: left;
+  }
+
+
+  .announcement-bar__inner--center {
+    justify-content: center;
     text-align: center;
   }
 
-  .announcement-bar p,
-  .announcement-bar a {
-    margin: 0;
-    color: inherit;
-    font-size: 0.9rem;
-    font-weight: 600;
-    text-decoration: none;
-    letter-spacing: 0.02em;
+
+  .announcement-bar__inner--right {
+    justify-content: flex-end;
+    text-align: right;
   }
 
-  .announcement-bar a:hover {
+
+  .announcement-bar__text {
+    font-size: var(--announcement-size);
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+
+  .announcement-bar__link {
+    color: inherit;
+    font-weight: 700;
     text-decoration: underline;
   }
-{% endstylesheet %}
 
+
+
+  @media screen and (max-width: 749px) {
+
+    .announcement-bar {
+      padding: var(--announcement-padding-mobile) 16px;
+    }
+
+
+    .announcement-bar__inner {
+      flex-direction: column;
+      gap: 8px;
+    }
+
+
+    .announcement-bar__inner-mobile--top {
+      justify-content: flex-start;
+      text-align: center;
+    }
+
+
+    .announcement-bar__inner-mobile--center {
+      justify-content: center;
+      text-align: center;
+    }
+
+
+    .announcement-bar__inner-mobile--bottom {
+      justify-content: flex-end;
+      text-align: center;
+    }
+
+
+    .announcement-bar__text {
+      font-size: var(--announcement-size-mobile);
+    }
+
+  }
+
+{% endstylesheet %}
 {% schema %}
 {
-  "name": "Announcement bar",
+  "name": "Announcement Bar",
+  "tag": "section",
+  "class": "section-announcement-bar",
   "settings": [
     {
-      "type": "checkbox",
-      "id": "show_bar",
-      "label": "Show announcement bar",
-      "default": true
+      "type": "richtext",
+      "id": "text",
+      "label": "Announcement text",
+      "default": "<p>Free shipping on orders over $50</p>"
     },
     {
       "type": "text",
-      "id": "text",
-      "label": "Announcement text",
-      "default": "Free shipping on orders over $75"
+      "id": "link_text",
+      "label": "Link text",
+      "default": "Shop now"
     },
     {
       "type": "url",
       "id": "link",
-      "label": "Optional link"
+      "label": "Link"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Desktop text size",
+      "min": 12,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "text_size_mobile",
+      "label": "Mobile text size",
+      "min": 10,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "label": "Desktop padding",
+      "min": 5,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "padding_mobile",
+      "label": "Mobile padding",
+      "min": 5,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "desktop_alignment",
+      "label": "Desktop alignment",
+      "default": "center",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "mobile_alignment",
+      "label": "Mobile alignment",
+      "default": "center",
+      "options": [
+        {
+          "value": "top",
+          "label": "Top"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "bottom",
+          "label": "Bottom"
+        }
+      ]
     },
     {
       "type": "color",
       "id": "background_color",
       "label": "Background color",
-      "default": "#f3d6e2"
+      "default": "#F8DDEB"
     },
     {
       "type": "color",
@@ -83,7 +243,7 @@
   ],
   "presets": [
     {
-      "name": "Announcement bar"
+      "name": "Announcement Bar"
     }
   ]
 }
