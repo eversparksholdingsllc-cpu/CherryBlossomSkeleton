@@ -1,4 +1,4 @@
-<header
+\<header
   class="site-header{% if section.settings.sticky_header %} site-header--sticky{% endif %}"
   style="
     --header-background: {{ section.settings.background_color }};
@@ -7,6 +7,7 @@
     --logo-width-mobile: {{ settings.logo_width_mobile }}px;
   "
 >
+
   <div class="site-header__inner">
 
     <details class="mobile-navigation">
@@ -16,7 +17,7 @@
         <span></span>
       </summary>
 
-      <nav class="mobile-navigation__drawer" aria-label="Mobile navigation">
+      <nav class="mobile-navigation__drawer">
         {% for link in section.settings.menu.links %}
           <a href="{{ link.url }}">
             {{ link.title | escape }}
@@ -37,40 +38,68 @@
 
 
     <a class="site-header__logo" href="{{ routes.root_url }}">
-      {% if settings.logo != blank %}
+
+      {% if settings.logo_desktop != blank %}
         {{
-          settings.logo
+          settings.logo_desktop
           | image_url: width: settings.logo_width
           | image_tag:
             loading: 'eager',
             widths: '100,150,200,250,300,400',
-            alt: shop.name
+            alt: shop.name,
+            class: 'desktop-logo'
         }}
-      {% else %}
+      {% endif %}
+
+
+      {% if settings.logo_mobile != blank %}
+        {{
+          settings.logo_mobile
+          | image_url: width: settings.logo_width_mobile
+          | image_tag:
+            loading: 'eager',
+            widths: '100,150,200,250,300',
+            alt: shop.name,
+            class: 'mobile-logo'
+        }}
+      {% endif %}
+
+
+      {% if settings.logo_desktop == blank and settings.logo_mobile == blank %}
         <span>{{ shop.name | escape }}</span>
       {% endif %}
+
     </a>
 
 
-    <nav class="desktop-navigation" aria-label="Main navigation">
+    <nav class="desktop-navigation">
       {% for link in section.settings.menu.links %}
+
         <div class="desktop-navigation__item">
 
           <a href="{{ link.url }}">
             {{ link.title | escape }}
           </a>
 
+
           {% if link.links != blank %}
+
             <div class="desktop-navigation__dropdown">
+
               {% for child_link in link.links %}
+
                 <a href="{{ child_link.url }}">
                   {{ child_link.title | escape }}
                 </a>
+
               {% endfor %}
+
             </div>
+
           {% endif %}
 
         </div>
+
       {% endfor %}
     </nav>
 
@@ -78,6 +107,7 @@
     <div class="site-header__icons">
 
       {% if section.settings.show_search %}
+
         <a
           class="header-icon"
           href="{{ routes.search_url }}"
@@ -85,31 +115,41 @@
         >
           {{ 'icon-search.svg' | inline_asset_content }}
         </a>
+
       {% endif %}
 
+
       {% if shop.customer_accounts_enabled %}
+
         <shopify-account menu="{{ section.settings.customer_account_menu }}">
           {{ 'icon-account.svg' | inline_asset_content }}
         </shopify-account>
+
       {% endif %}
+
 
       <a
         class="header-icon site-header__cart"
         href="{{ routes.cart_url }}"
         aria-label="Cart"
       >
+
         {{ 'icon-cart.svg' | inline_asset_content }}
 
         {% if cart.item_count > 0 %}
+
           <span class="site-header__cart-count">
             {{ cart.item_count }}
           </span>
+
         {% endif %}
+
       </a>
 
     </div>
 
   </div>
+
 </header>
 {% stylesheet %}
   .site-header {
@@ -144,17 +184,23 @@
   .site-header__logo {
     display: flex;
     align-items: center;
-    font-size: 1.3rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
+    justify-content: center;
   }
 
   .site-header__logo img {
-    display: block;
-    width: var(--logo-width);
     max-width: 100%;
     height: auto;
   }
+
+  .desktop-logo {
+    display: block;
+    width: var(--logo-width);
+  }
+
+  .mobile-logo {
+    display: none;
+  }
+
 
   .desktop-navigation {
     display: flex;
@@ -203,6 +249,7 @@
     display: block;
   }
 
+
   .site-header__icons {
     display: flex;
     align-items: center;
@@ -246,6 +293,7 @@
     font-weight: 700;
   }
 
+
   .mobile-navigation {
     display: none;
   }
@@ -266,6 +314,7 @@
     background: currentColor;
     border-radius: 999px;
   }
+
 
   .mobile-navigation__drawer {
     position: absolute;
@@ -298,6 +347,7 @@
     opacity: 0.8;
   }
 
+
   @media screen and (max-width: 749px) {
 
     .site-header__inner {
@@ -314,14 +364,16 @@
       display: none;
     }
 
-    .site-header__logo {
-      justify-content: center;
-      text-align: center;
+
+    .desktop-logo {
+      display: none;
     }
 
-    .site-header__logo img {
+    .mobile-logo {
+      display: block;
       width: var(--logo-width-mobile);
     }
+
 
     .site-header__icons {
       gap: 2px;

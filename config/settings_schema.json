@@ -12,8 +12,13 @@
     "settings": [
       {
         "type": "image_picker",
-        "id": "logo",
-        "label": "Logo"
+        "id": "logo_desktop",
+        "label": "Desktop logo"
+      },
+      {
+        "type": "image_picker",
+        "id": "logo_mobile",
+        "label": "Mobile logo"
       },
       {
         "type": "range",
